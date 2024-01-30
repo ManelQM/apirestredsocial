@@ -20,7 +20,7 @@ app.use(cors());
 app.use(express.json()); 
 app.use(express.urlencoded({extended:true})); 
 // CARGAR ROUTES 
-app.get("/demoroute", (req,res) => {
+app.get("/socialnet", (req,res) => {
 
     return res.status(200).json({
         "id": 1,
