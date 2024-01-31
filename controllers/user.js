@@ -52,6 +52,27 @@ const register = async (req, res) => {
   }
 };
 
+const login = async (req,res) => { 
+try {
+ let params = req.body 
+if(!params.email || params.password){
+    return res.status(400).json({
+        status: "error",
+        message: "Please complete the required fields",
+    })
+}
+ const users = User.findOne({email:params.email})
+ if(!users) return res.status(404).json({
+    status: "error",
+    message: "User dont exists",
+ })
+}catch {
+
+}
+
+}; 
+
 module.exports = {
   register,
+  login,
 };
