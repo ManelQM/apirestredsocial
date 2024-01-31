@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jwt = require("../services/auth"); 
 
 const register = async (req, res) => {
   try {
@@ -72,18 +73,21 @@ const login = async (req, res) => {
       });
     } 
     // Encriptar password
-   let userPassword =  bcrypt.compareSync(params.password,users.password); 
+   const userPassword =  bcrypt.compareSync(params.password,users.password); 
    if(!userPassword) {
     return res.status(400).json({
         status:"error", 
         message: "Password dont exists",
     })
    }
+   const token = jwt.createToken(users); 
     return res.status(200).json({
         status: "success", 
         message: "You are logged, enjoy!",
-        users
+        users,
+        token
     })
+    
   } catch (error) {
     console.error(error); 
     return res.status(400).json({
