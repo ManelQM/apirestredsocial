@@ -20,6 +20,15 @@ app.use(cors());
 app.use(express.json()); 
 app.use(express.urlencoded({extended:true})); 
 // CARGAR ROUTES 
+const userRoutes = require("./routes/user"); 
+const PublicationRoutes = require("./routes/publication"); 
+const FollowRoutes = require("./routes/follow"); 
+
+app.use("/socialnet",userRoutes); 
+app.use("/socialnet",PublicationRoutes); 
+app.use("/socialnet",FollowRoutes); 
+
+
 app.get("/socialnet", (req,res) => {
 
     return res.status(200).json({
