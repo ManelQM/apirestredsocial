@@ -7,8 +7,7 @@ const moment = require("moment"); // libreria para manejar fechas
 const secret = "El_que_come_fuego_expulsa_chispas_757"; 
 
 // CREAR UNA FUNCION PARA GENERAR TOKENS
-
-exports.createToken = (user) => {
+const createToken = (user) => {
     const payload = {
         id: user._id,
         name: user.name,
@@ -25,3 +24,7 @@ exports.createToken = (user) => {
 }
 
 
+module.exports = {
+    secret,
+    createToken,
+}
