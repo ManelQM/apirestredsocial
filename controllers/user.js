@@ -6,6 +6,16 @@ const test = (req,res) => {
     })
 }
 
+const register = async (req, res) => { 
+    try {
+       let params = req.body;
+    }catch(error){
+      
+    }
+
+}
+ 
 module.exports = {
-    test
+    test,
+    register,
 };
