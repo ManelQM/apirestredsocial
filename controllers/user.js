@@ -52,25 +52,46 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req,res) => { 
-try {
- let params = req.body 
-if(!params.email || params.password){
-    return res.status(400).json({
+const login = async (req, res) => {
+  try {
+    let params = req.body;
+
+    if (!params.email || !params.password) {
+      return res.status(400).json({
         status: "error",
         message: "Please complete the required fields",
+      });
+    }
+    const users = await User.findOne({ email: params.email })
+    // .select({
+    //   password: 0, }); // metodo que nos permite seleccionar que campos queremos que nos lleguen y cuales no.
+    if (!users) { 
+      return res.status(404).json({
+        status: "error",
+        message: "User dont exists",
+      });
+    } 
+    // Encriptar password
+   let userPassword =  bcrypt.compareSync(params.password,users.password); 
+   if(!userPassword) {
+    return res.status(400).json({
+        status:"error", 
+        message: "Password dont exists",
     })
-}
- const users = User.findOne({email:params.email})
- if(!users) return res.status(404).json({
-    status: "error",
-    message: "User dont exists",
- })
-}catch {
-
-}
-
-}; 
+   }
+    return res.status(200).json({
+        status: "success", 
+        message: "You are logged, enjoy!",
+        users
+    })
+  } catch (error) {
+    console.error(error); 
+    return res.status(400).json({
+        status: "error",
+        message: "Internal Server Error",
+    })
+  }
+};
 
 module.exports = {
   register,
