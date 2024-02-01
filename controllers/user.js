@@ -10,6 +10,7 @@ const test = (req, res) => {
   });
 };
 
+// REGISTER CONTROLLER 
 
 const register = async (req, res) => {
   try {
@@ -62,6 +63,8 @@ const register = async (req, res) => {
   }
 };
 
+// LOGIN CONTROLLER 
+
 const login = async (req, res) => {
   try {
     let params = req.body;
@@ -78,7 +81,7 @@ const login = async (req, res) => {
     if (!users) { 
       return res.status(404).json({
         status: "error",
-        message: "User dont exists",
+        message: "Email or password invalid",
       });
     } 
     // Encriptar password
@@ -86,7 +89,7 @@ const login = async (req, res) => {
    if(!userPassword) {
     return res.status(400).json({
         status:"error", 
-        message: "Password dont exists",
+        message: "Bad password",
     })
    }
    const token = jwt.createToken(users); 
@@ -106,8 +109,41 @@ const login = async (req, res) => {
   }
 };
 
+// GET PROFILE CONTROLLER 
+
+const getProfile = async (req,res) => {
+
+  try{
+    // Recibir el parametro 
+    const id = req.params.id; 
+    // Consulta para sacar los datos del usuario
+
+    const profile = await User.findById(id);  
+    if(!profile || !id){
+      return res.status(400).json({
+        status: "error",
+        message: "Who are you?, user dont exists"
+      })
+    }
+    // Devolver profile/resultado 
+    return res.status(200).json({
+      status: "success", 
+      message: "This your profile",
+      user: profile,
+    })
+  }catch(error){
+    console.error("Error trying to find profile", error);
+    return res.status(404).json({
+      status: "error",
+      message: "Internal Server Error",
+    })
+  }
+
+}
+
 module.exports = {
+  test,
   register,
   login,
-  test
+  getProfile,
 };
