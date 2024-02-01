@@ -13,7 +13,7 @@ const auth = (req, res, next) => {
     // COMPROBAR SI ME LLEGA LA CABECERA DE AUTH
     return res.status(403).json({
       status: "error",
-      message: "Missing headers authorization",
+      message: "Missing Token",
     });
   }
 

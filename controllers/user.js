@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("../services/auth"); 
+const mongoosePagination = require("mongoose-pagination");
 
 
 
@@ -139,6 +140,46 @@ const getProfile = async (req,res) => {
     })
   }
 
+}; 
+
+const getAllUsers = async (req,res) => {
+
+try{
+//Controlar en que pagina estamos
+let page = 1; 
+if(req.params.page) {
+  page =  req.params.page; 
+}
+page = parseInt(page); 
+//consulta con mongoose pagination 
+let itemsPerPage = 5; 
+const findUser = await User.find().sort("_id").paginate(page,itemsPerPage);
+if(!findUser || !page) {
+  return res.status(400).json({
+    status: "error",
+    message: "Empty list",
+  })
+}
+
+//Devolver Resultado
+
+return res.status(200).json({
+  status: "success",
+  message: "Users list",
+  findUser,
+  page,
+  itemsPerPage,
+  pages: false, 
+})
+
+}catch(error){
+console.error("ERROR", error); 
+return res.status(404).json({
+  status: "error",
+  message: "Internal Server Error",
+})
+}
+
 }
 
 module.exports = {
@@ -146,4 +187,5 @@ module.exports = {
   register,
   login,
   getProfile,
+  getAllUsers,
 };
