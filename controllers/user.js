@@ -1,9 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const jwt = require("../services/auth"); 
+const jwt = require("../services/auth");
 const mongoosePagination = require("mongoose-pagination");
-
-
 
 const test = (req, res) => {
   return res.status(200).json({
@@ -11,7 +9,7 @@ const test = (req, res) => {
   });
 };
 
-// REGISTER CONTROLLER 
+// REGISTER CONTROLLER
 
 const register = async (req, res) => {
   try {
@@ -64,7 +62,7 @@ const register = async (req, res) => {
   }
 };
 
-// LOGIN CONTROLLER 
+// LOGIN CONTROLLER
 
 const login = async (req, res) => {
   try {
@@ -76,111 +74,132 @@ const login = async (req, res) => {
         message: "Please complete the required fields",
       });
     }
-    const users = await User.findOne({ email: params.email })
+    const users = await User.findOne({ email: params.email });
     // .select({
     //   password: 0, }); // metodo que nos permite seleccionar que campos queremos que nos lleguen y cuales no.
-    if (!users) { 
+    if (!users) {
       return res.status(404).json({
         status: "error",
         message: "Email or password invalid",
       });
-    } 
+    }
     // Encriptar password
-   const userPassword =  bcrypt.compareSync(params.password,users.password); 
-   if(!userPassword) {
-    return res.status(400).json({
-        status:"error", 
-        message: "Bad password",
-    })
-   }
-   const token = jwt.createToken(users); 
-    return res.status(200).json({
-        status: "success", 
-        message: "You are logged, enjoy!",
-        users,
-        token
-    })
-    
-  } catch (error) {
-    console.error(error); 
-    return res.status(400).json({
+    const userPassword = bcrypt.compareSync(params.password, users.password);
+    if (!userPassword) {
+      return res.status(400).json({
         status: "error",
-        message: "Internal Server Error",
-    })
+        message: "Bad password",
+      });
+    }
+    const token = jwt.createToken(users);
+    return res.status(200).json({
+      status: "success",
+      message: "You are logged, enjoy!",
+      users,
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
   }
 };
 
-// GET PROFILE CONTROLLER 
+// GET PROFILE CONTROLLER
 
-const getProfile = async (req,res) => {
-
-  try{
-    // Recibir el parametro 
-    const id = req.params.id; 
+const getProfile = async (req, res) => {
+  try {
+    // Recibir el parametro
+    const id = req.params.id;
     // Consulta para sacar los datos del usuario
 
-    const profile = await User.findById(id);  
-    if(!profile || !id){
+    const profile = await User.findById(id);
+    if (!profile || !id) {
       return res.status(400).json({
         status: "error",
-        message: "Who are you?, user dont exists"
-      })
+        message: "Who are you?, user dont exists",
+      });
     }
-    // Devolver profile/resultado 
+    // Devolver profile/resultado
     return res.status(200).json({
-      status: "success", 
+      status: "success",
       message: "This your profile",
       user: profile,
-    })
-  }catch(error){
+    });
+  } catch (error) {
     console.error("Error trying to find profile", error);
     return res.status(404).json({
       status: "error",
       message: "Internal Server Error",
-    })
+    });
   }
+};
 
-}; 
+const getAllUsers = async (req, res) => {
+  try {
+    //Controlar en que pagina estamos
+    let page = 1;
+    if (req.params.page) {
+      page = req.params.page;
+    }
+    page = parseInt(page);
+    //consulta con mongoose pagination
+    let itemsPerPage = 5;
+    const findUser = await User.find().sort("_id").paginate(page, itemsPerPage);
+    if (!findUser || !page) {
+      return res.status(400).json({
+        status: "error",
+        message: "Empty list",
+      });
+    }
 
-const getAllUsers = async (req,res) => {
+    //Devolver Resultado
 
-try{
-//Controlar en que pagina estamos
-let page = 1; 
-if(req.params.page) {
-  page =  req.params.page; 
-}
-page = parseInt(page); 
-//consulta con mongoose pagination 
-let itemsPerPage = 5; 
-const findUser = await User.find().sort("_id").paginate(page,itemsPerPage);
-if(!findUser || !page) {
-  return res.status(400).json({
-    status: "error",
-    message: "Empty list",
-  })
-}
+    return res.status(200).json({
+      status: "success",
+      message: "Users list",
+      findUser,
+      page,
+      itemsPerPage,
+      pages: Math.ceil(User / itemsPerPage),
+    });
+  } catch (error) {
+    console.error("ERROR", error);
+    return res.status(404).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
 
-//Devolver Resultado
-
-return res.status(200).json({
-  status: "success",
-  message: "Users list",
-  findUser,
-  page,
-  itemsPerPage,
-  pages: false, 
-})
-
-}catch(error){
-console.error("ERROR", error); 
-return res.status(404).json({
-  status: "error",
-  message: "Internal Server Error",
-})
-}
-
-}
+const updateUserProfile = async (req, res) => {
+  try {
+    let profile = req.body;
+    const editedProfile = await User.update(
+      {
+        name: profile.name,
+        surname: profile.surname,
+        nick: profile.nick,
+      },
+      {
+        where: { emal: req.auth.user.email },
+      }
+    );
+    return res.status(200).json({
+      status: "success",
+      message: "User has been updated",
+      user: editedProfile,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "error",
+      message: "Cant update User",
+    });
+  }
+};
 
 module.exports = {
   test,
@@ -188,4 +207,5 @@ module.exports = {
   login,
   getProfile,
   getAllUsers,
+  updateUserProfile,
 };
