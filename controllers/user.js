@@ -177,16 +177,19 @@ const getAllUsers = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   try {
     let profile = req.body;
-    const editedProfile = await User.update(
-      {
-        name: profile.name,
-        surname: profile.surname,
-        nick: profile.nick,
-      },
-      {
-        where: { emal: req.auth.user.email },
-      }
+    const editedProfile = await User.findOneAndUpdate(
+      { email: req.authorization.email },
+      { name: profile.name, surname: profile.surname, nick: profile.nick },
+      { new: true } // Para obtener el documento actualizado
     );
+
+    if (!editedProfile) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
     return res.status(200).json({
       status: "success",
       message: "User has been updated",
@@ -195,11 +198,12 @@ const updateUserProfile = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: "error",
-      message: "Cant update User",
+      status: "error",
+      message: "Can't update User",
     });
   }
 };
+   
 
 module.exports = {
   test,

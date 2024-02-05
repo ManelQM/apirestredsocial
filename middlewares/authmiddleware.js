@@ -34,7 +34,7 @@ const auth = (req, res, next) => {
       });
     }
       // AGREGAR DATOS DE USUARIO A REQUEST
-        req.user = payload;
+        req.authorization = payload;
   } catch (error) {
     console.error("Error decoding token:", error);
     return res.status(404).json({
