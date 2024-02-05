@@ -176,6 +176,7 @@ const getAllUsers = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
   try {
+
     let profile = req.body;
     const editedProfile = await User.findOneAndUpdate(
       { email: req.authorization.email },
@@ -203,7 +204,17 @@ const updateUserProfile = async (req, res) => {
     });
   }
 };
-   
+
+const uploadAvatar = async (req,res) => { 
+
+try {
+
+} catch (error) {
+
+
+}
+
+}
 
 module.exports = {
   test,
@@ -212,4 +223,5 @@ module.exports = {
   getProfile,
   getAllUsers,
   updateUserProfile,
+  uploadAvatar,
 };
