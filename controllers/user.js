@@ -244,7 +244,6 @@ const uploadAvatar = async (req, res) => {
       { new: true }
     ); // filename es el nombre final generado por Multer
 
-    console.log(storedUserAvatarImg, "EL MOGOLLON")
     if (!storedUserAvatarImg) {
       return res.status(400).json({
         status: "error",
@@ -267,6 +266,34 @@ const uploadAvatar = async (req, res) => {
   }
 };
 
+const getAvatar = async (req,res) => {
+
+try{
+  // Sacar el parametro de la url
+const fileAvatar = await req.params.file; 
+  // Montar el path real de la imagen
+const filePath =  "./uploads/avatars/"+file  
+  // Comprobar que existe
+fs.stat(filePath, (exists) => {
+
+  if(!exists) {
+    return res.status(404).json({
+      status: "error",
+      message: "Cant find image",
+    })
+  };
+  
+})  
+  // Devolver un file
+
+
+} catch (error) {
+
+
+}
+
+} 
+
 module.exports = {
   test,
   register,
@@ -275,4 +302,5 @@ module.exports = {
   getAllUsers,
   updateUserProfile,
   uploadAvatar,
+  getAvatar,
 };
