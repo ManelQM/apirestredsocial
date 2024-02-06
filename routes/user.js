@@ -6,7 +6,7 @@ const authorization = require("../middlewares/authmiddleware");
 
 // Configuración de subida de archivos; 
 const storage = multer.diskStorage({
-    destinantion: (req,file,cb) => {
+    destination: (req,file,cb) => {
         cb(null,"./uploads/avatars/")
     } , 
     filename: (req,file,cb) => {
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 }); 
 
 // Crear storage donde guardaremos los uploads 
-const uploads = multer({storage});
+const uploads = multer({storage:storage});
 
 
 router.get("/demo", authorization.auth,UserController.test)
@@ -24,6 +24,6 @@ router.get("/login", UserController.login);
 router.get("/profile/:id",authorization.auth,UserController.getProfile);
 router.get("/userslist/:page?",authorization.auth,UserController.getAllUsers);
 router.put("/update",authorization.auth,UserController.updateUserProfile); 
-router.post("uploadavatar", [authorization.auth,uploads.single("file_0")],UserController.uploadAvatar);
+router.post("/uploadavatar", authorization.auth,[uploads.single("file0")],UserController.uploadAvatar);
 
 module.exports = router;
