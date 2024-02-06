@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("../services/auth");
 const mongoosePagination = require("mongoose-pagination");
 const fs = require("fs");
+const path = require("path");
+
 const test = (req, res) => {
   return res.status(200).json({
     mensaje: "Esto es para ver si funciona el middleware auth/token",
@@ -205,7 +207,6 @@ const updateUserProfile = async (req, res) => {
 };
 
 const uploadAvatar = async (req, res) => {
-
   try {
     // Recoger fichero de imagen y comprobar que existe
     if (!req.file) {
@@ -216,10 +217,10 @@ const uploadAvatar = async (req, res) => {
     }
     // Conseguir nombre del archivo
     let image = req.file.originalname; //originalname nombre que le da Multer a la imagen en sí
-   
+
     // Sacar la extension del archivo
     const imageSplit = image.split(".");
-    const extension = imageSplit[1];  
+    const extension = imageSplit[1];
 
     // Comprobar extension
     if (
@@ -239,7 +240,7 @@ const uploadAvatar = async (req, res) => {
 
     // Si es correcto guardar en bbdd
     const storedUserAvatarImg = await User.findOneAndUpdate(
-      {_id : req.authorization.id},
+      { _id: req.authorization.id },
       { image: req.file.filename },
       { new: true }
     ); // filename es el nombre final generado por Multer
@@ -255,7 +256,7 @@ const uploadAvatar = async (req, res) => {
       status: "success",
       message: "Avatar uploaded with success!",
       user: storedUserAvatarImg,
-      file: req.file,   
+      file: req.file,
     });
   } catch (error) {
     console.error(error);
@@ -266,33 +267,32 @@ const uploadAvatar = async (req, res) => {
   }
 };
 
-const getAvatar = async (req,res) => {
-
-try{
-  // Sacar el parametro de la url
-const fileAvatar = await req.params.file; 
-  // Montar el path real de la imagen
-const filePath =  "./uploads/avatars/"+file  
-  // Comprobar que existe
-fs.stat(filePath, (exists) => {
-
-  if(!exists) {
+const getAvatar = async (req, res) => {
+  try {
+    // Sacar el parametro de la url
+    const fileAvatar = await req.params.file;
+    console.log(req.params.file, "el params");
+    // Montar el path real de la imagen
+    const filePath = "./uploads/avatars/" + req.params.file;
+    // Comprobar que existe
+    fs.stat(filePath, () => {
+      if (!fileAvatar) {
+        return res.status(404).json({
+          status: "error",
+          message: "Cant find image",
+        });
+      }
+      // Devolver un file
+      return res.sendFile(path.resolve(filePath));
+    });
+  } catch (error) {
+    console.error(error);
     return res.status(404).json({
       status: "error",
-      message: "Cant find image",
-    })
-  };
-  
-})  
-  // Devolver un file
-
-
-} catch (error) {
-
-
-}
-
-} 
+      message: "Internal Server Error",
+    });
+  }
+};
 
 module.exports = {
   test,
