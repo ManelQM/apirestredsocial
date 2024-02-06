@@ -1,10 +1,19 @@
-const test2 = (req,res) => {
-    return res.status(200).json({
-        message: "esto va o que",
-        nombre: "followers"
-    })
+const Follow = require ("../models/follow"); 
+const User = require("../models/user"); 
+
+
+const followUser = async (req,res) => {
+
+    try{
+
+
+
+    }catch(error) {
+
+
+    }
 }
 
 module.exports = {
-    test2
-};
+    followUser,
+}

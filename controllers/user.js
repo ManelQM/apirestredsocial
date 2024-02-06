@@ -271,7 +271,6 @@ const getAvatar = async (req, res) => {
   try {
     // Sacar el parametro de la url
     const fileAvatar = await req.params.file;
-    console.log(req.params.file, "el params");
     // Montar el path real de la imagen
     const filePath = "./uploads/avatars/" + req.params.file;
     // Comprobar que existe
@@ -293,6 +292,9 @@ const getAvatar = async (req, res) => {
     });
   }
 };
+
+
+
 
 module.exports = {
   test,
