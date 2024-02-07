@@ -4,7 +4,7 @@ const FollowController = require("../controllers/follow");
 const authorization = require("../middlewares/authmiddleware"); 
 
 
-router.post("/followuser",authorization.auth,FollowController.followUser);
+router.post("/followuser",authorization.auth,FollowController.saveFollow);
 
 
 
