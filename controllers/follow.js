@@ -40,24 +40,38 @@ const saveFollow = async (req, res) => {
   }
 };
 
-// UNFOLLOW CONTROLLER 
+// UNFOLLOW CONTROLLER
 
- const unfollow = async (req,res) => {
+const unfollow = async (req, res) => {
+  try {
+    // Recoger id del usuario que se deja de seguir
+    let userToUnfollow = req.params.id;
+    // Recoger id del usuario logeado
+    let userLogId = req.authorization.id;
+    // Encontrar las coincidencias y borrar
+    const deleteTheFollow = await Follow.find({
+      user: userLogId,
+      followed: userToUnfollow,
+    }).deleteOne();
 
-    try {
-        // Recoger id del usuario logeado
-        let userId = req.authorization.id; 
-    
-        // Recoger id del usuario que se deja de seguir
-         let userToUnfollow = req.params.id; 
-
-        // Encontrar las coincidencias y borrar
-
-    } catch {
-
+    if(!deleteTheFollow || !userToUnfollow) {
+      return res.status(500).json({
+        status: "error",
+        message: "Cant unfollow, request error"
+      })
     }
-
- }
+    return res.status(200).json({
+      status: "success",
+      message: "You dont follow this User anymore",
+    });
+  } catch (error){
+    console.error(error); 
+    return res.status(404).json({
+      status: "error",
+      message: "Internal Server Error",
+    })
+  }
+};
 
 module.exports = {
   saveFollow,
