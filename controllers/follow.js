@@ -73,7 +73,53 @@ const unfollow = async (req, res) => {
   }
 };
 
+// FOLLOW LIST CONTROLLER - USER FOLLOWS A NUMBER OF USERS 
+
+const following = async (req, res) => {
+
+  try {
+    // Recoger id del usuario logeado
+    let userId = req.authorization.id; 
+    // Recoger id por params 
+    
+    // Pagina elegida, si no la pagina 1 
+
+    // Usuarios por pagina que quiero mostrar 
+
+    // Find a follow, popular datos de los usuarios y paginar con mogoose paginate
+
+
+
+  } catch (error) {
+    console.error(error); 
+    return res.status(404).json({
+      status: "error", 
+      message: "Internal Server Error",
+    })
+
+  }
+
+}
+
+const followed = async (req,res) => {
+
+  try{
+
+  } catch (error) {
+
+    console.error(error); 
+    return res.status(404).json({
+      status: "error",
+      message: "Internal Server Error",
+    })
+
+  }
+}
+
+
 module.exports = {
   saveFollow,
   unfollow,
+  following,
+  followed,
 };
