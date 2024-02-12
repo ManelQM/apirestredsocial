@@ -2,8 +2,6 @@ const Follow = require("../models/follow");
 const User = require("../models/user");
 const mongoosePagination = require("mongoose-pagination");
 
-
-
 // FOLLOW USER CONTROLLER - USER LOGGED FOLLOWS ANOTHER USER
 const saveFollow = async (req, res) => {
   try {
@@ -57,83 +55,77 @@ const unfollow = async (req, res) => {
       followed: userToUnfollow,
     }).deleteOne();
 
-    if(!deleteTheFollow || !userToUnfollow) {
+    if (!deleteTheFollow || !userToUnfollow) {
       return res.status(500).json({
         status: "error",
-        message: "Cant unfollow, request error"
-      })
+        message: "Cant unfollow, request error",
+      });
     }
     return res.status(200).json({
       status: "success",
       message: "You dont follow this User anymore",
     });
-  } catch (error){
-    console.error(error); 
+  } catch (error) {
+    console.error(error);
     return res.status(404).json({
       status: "error",
       message: "Internal Server Error",
-    })
+    });
   }
 };
 
-// FOLLOW LIST CONTROLLER - USER FOLLOWS A NUMBER OF USERS 
+// FOLLOW LIST CONTROLLER - USER FOLLOWS A NUMBER OF USERS
 
 const following = async (req, res) => {
-
   try {
     // Recoger id del usuario logeado
-    let userId = req.authorization.id; 
-    // Recoger id por params 
-    if (req.params.id) userId = req.params.id; 
+    let userId = req.authorization.id;
+    // Recoger id por params
+    if (req.params.id) userId = req.params.id;
 
-    // Pagina elegida, si no la pagina 1 
-    let page = 1; 
-    if (req.params.page) page = req.params.page; 
-    // Usuarios por pagina que quiero mostrar 
-    const itemsPerPage = 5; 
+    // Pagina elegida, si no la pagina 1
+    let page = 1;
+    if (req.params.page) page = req.params.page;
+    // Usuarios por pagina que quiero mostrar
+    const itemsPerPage = 5;
     // Find a follow, mostrar datos de los usuarios y paginar con mogoose paginate
     const userFollows = await Follow.find({
       user: userId,
-    }).populate("user followed").exec()
-    if(!userFollows || !userId) {
+    })
+      .populate("user followed")
+      .paginate(page, itemsPerPage)
+      .exec();
+
+    if (!userFollows || !userId) {
       return res.status(400).json({
         status: "error",
         message: "Cant find the follows list",
-        
-      })
+      });
     }
     return res.status(200).json({
-      status: "success", 
+      status: "success",
       message: "Follows list",
       userFollows,
-    })
-
+    });
   } catch (error) {
-    console.error(error); 
-    return res.status(404).json({
-      status: "error", 
-      message: "Internal Server Error",
-    })
-
-  }
-
-}
-
-const followed = async (req,res) => {
-
-  try{
-
-  } catch (error) {
-
-    console.error(error); 
+    console.error(error);
     return res.status(404).json({
       status: "error",
       message: "Internal Server Error",
-    })
-
+    });
   }
-}
+};
 
+const followed = async (req, res) => {
+  try {
+  } catch (error) {
+    console.error(error);
+    return res.status(404).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
 
 module.exports = {
   saveFollow,
