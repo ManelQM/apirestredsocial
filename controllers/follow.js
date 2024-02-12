@@ -83,7 +83,7 @@ const following = async (req, res) => {
     // Recoger id por params
     if (req.params.id) userId = req.params.id;
 
-    // Pagina elegida, si no la pagina 1
+    // Pagina elegida, si no la pagina 12222222
     let page = 1;
     if (req.params.page) page = req.params.page;
     // Usuarios por pagina que quiero mostrar
