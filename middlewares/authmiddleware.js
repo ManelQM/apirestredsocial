@@ -3,7 +3,7 @@ const jwt = require("jwt-simple");
 const moment = require("moment");
 
 // IMPORTAR CLAVE SECRETA
-const libjwt = require("../services/auth");
+const libjwt = require("../services/authService");
 const secret = libjwt.secret;
 
 // FUNCION DE AUTH

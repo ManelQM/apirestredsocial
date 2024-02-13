@@ -1,9 +1,10 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const jwt = require("../services/auth");
+const jwt = require("../services/authService");
 const mongoosePagination = require("mongoose-pagination");
 const fs = require("fs");
 const path = require("path");
+
 
 const test = (req, res) => {
   return res.status(200).json({

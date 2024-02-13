@@ -1,6 +1,8 @@
 const Follow = require("../models/follow");
 const User = require("../models/user");
 const mongoosePagination = require("mongoose-pagination");
+  //SERVICE
+const followService = require("../services/followService"); 
 
 // FOLLOW USER CONTROLLER - USER LOGGED FOLLOWS ANOTHER USER
 const saveFollow = async (req, res) => {
