@@ -26,6 +26,21 @@ const followUserIds = async (userId) => {
   }
 };
 
+const followThisUser = async(req,res) => {
+  try{
+    let following = await Follow.find({user:userId})
+    .select({followed :1, _id: 0})
+    .exec();
+    let followers = await Follow.find({user:userId})
+    .select({user: 1, _id: 0})
+    .exec(); 
+  }catch{
+
+  }
+
+}
+
+
 module.exports = {
   followUserIds,
 };

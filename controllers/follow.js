@@ -7,7 +7,7 @@ const followService = require("../services/followService");
 // FOLLOW USER CONTROLLER - USER LOGGED FOLLOWS ANOTHER USER
 const saveFollow = async (req, res) => {
   try {
-    //Conseguir datos por body
+    //Conseguir datos por body del usuario que se desea seguir.
     let params = req.body;
 
     // Sacar id del usuario identificado
@@ -104,9 +104,9 @@ const following = async (req, res) => {
         message: "Cant find the follows list",
       });
     }
-    // LLamada metodo para sacar el array de usuarios que me siguen
+    // LLamada metodo para sacar el array de usuarios que me siguen y sigo
     let followUserIds = await followService.followUserIds(req.authorization.id);
-    console.log(followUserIds, "aqui llega o qué?");
+    // Respuesta
     return res.status(200).json({
       status: "success",
       message: "Follows list",
