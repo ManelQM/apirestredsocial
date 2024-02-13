@@ -26,9 +26,9 @@ const followUserIds = async (userId) => {
   }
 };
 
-const followThisUser = async(req,res) => {
+const followThisUser = async(userId, profileUserId) => {
   try{
-    let following = await Follow.find({user:userId})
+    let following = await Follow.findOne({user:userId, followed:profileUserId })
     .select({followed :1, _id: 0})
     .exec();
     let followers = await Follow.find({user:userId})
