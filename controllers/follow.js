@@ -1,8 +1,8 @@
 const Follow = require("../models/follow");
 const User = require("../models/user");
 const mongoosePagination = require("mongoose-pagination");
-  //SERVICE
-const followService = require("../services/followService"); 
+//SERVICE
+const followService = require("../services/followService");
 
 // FOLLOW USER CONTROLLER - USER LOGGED FOLLOWS ANOTHER USER
 const saveFollow = async (req, res) => {
@@ -85,7 +85,7 @@ const following = async (req, res) => {
     // Recoger id por params
     if (req.params.id) userId = req.params.id;
 
-    // Pagina elegida, si no la pagina 12222222
+    // Pagina elegida, si no la pagina 1
     let page = 1;
     if (req.params.page) page = req.params.page;
     // Usuarios por pagina que quiero mostrar
@@ -104,10 +104,22 @@ const following = async (req, res) => {
         message: "Cant find the follows list",
       });
     }
+    // LLamada metodo para sacar el array de usuarios que me siguen
+    let followUserIds = await followService.followUserIds(req.authorization.id);
+    console.log(followUserIds, "aqui llega o qué?");
     return res.status(200).json({
       status: "success",
       message: "Follows list",
       userFollows,
+      page,
+      userFollowing: {
+        message: "SIGUIENDO",
+        data: followUserIds.following,
+      },
+      userFollowMe: {
+        message: "SEGUIDORES",
+        data: followUserIds.followers,       
+      },
     });
   } catch (error) {
     console.error(error);
