@@ -84,7 +84,6 @@ const following = async (req, res) => {
     let userId = req.authorization.id;
     // Recoger id por params
     if (req.params.id) userId = req.params.id;
-
     // Pagina elegida, si no la pagina 1
     let page = 1;
     if (req.params.page) page = req.params.page;

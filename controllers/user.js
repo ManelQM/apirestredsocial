@@ -166,9 +166,10 @@ const getAllUsers = async (req, res) => {
         message: "Empty list",
       });
     }
-
+    //Obtenemos además una lista dentro de la lista total de usuarios en la cual aparecen los usuarios que sigo y que me siguen
+    let followUserIds = await followService.followUserIds(req.authorization.id);
     //Devolver Resultado
-
+    
     return res.status(200).json({
       status: "success",
       message: "Users list",
@@ -176,6 +177,14 @@ const getAllUsers = async (req, res) => {
       page,
       itemsPerPage,
       pages: Math.ceil(User / itemsPerPage),
+      userFollowing: {
+        message: "SIGUIENDO",
+        data: followUserIds.following,
+      },
+      userFollowMe: {
+        message: "SEGUIDORES",
+        data: followUserIds.followers,       
+      },
     });
   } catch (error) {
     console.error("ERROR", error);
