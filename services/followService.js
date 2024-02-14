@@ -27,13 +27,13 @@ const followUserIds = async (user) => {
 };
 
 const followThisUser = async (user) => {
-  let following = await Follow.findOne({
+  let following = await Follow.find({
     user: user,
     // followed: followed,
   });
   console.log("Esto viene algo o que", user);
 
-  let follower = await Follow.findOne({
+  let follower = await Follow.find({
     // user: followed,
     followed: user,
   });
