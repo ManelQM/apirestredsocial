@@ -91,7 +91,7 @@ const following = async (req, res) => {
     const itemsPerPage = 5;
     // Find a follow, mostrar datos de los usuarios y paginar con mogoose paginate
     const userFollows = await Follow.find({
-      followed: userId,
+      user: userId,
     })
       .populate("user followed")
       .paginate(page, itemsPerPage)
@@ -117,7 +117,7 @@ const following = async (req, res) => {
       },
       userFollowMe: {
         message: "SEGUIDORES",
-        data: followUserIds.followers,       
+        data: followUserIds.followers,
       },
     });
   } catch (error) {
@@ -128,6 +128,8 @@ const following = async (req, res) => {
     });
   }
 };
+
+// FOLLOW LIST CONTROLLER - USERS FOLLOWERS
 
 const followed = async (req, res) => {
   try {
@@ -142,7 +144,7 @@ const followed = async (req, res) => {
     const itemsPerPage = 5;
     // Find a follow, mostrar datos de los usuarios y paginar con mogoose paginate
     const userFollows = await Follow.find({
-      user: userId,
+      followed: userId,
     })
       .populate("user followed")
       .paginate(page, itemsPerPage)
@@ -168,7 +170,7 @@ const followed = async (req, res) => {
       },
       userFollowMe: {
         message: "SEGUIDORES",
-        data: followUserIds.followers,       
+        data: followUserIds.followers,
       },
     });
   } catch (error) {
