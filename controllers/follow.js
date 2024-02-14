@@ -91,6 +91,57 @@ const following = async (req, res) => {
     const itemsPerPage = 5;
     // Find a follow, mostrar datos de los usuarios y paginar con mogoose paginate
     const userFollows = await Follow.find({
+      followed: userId,
+    })
+      .populate("user followed")
+      .paginate(page, itemsPerPage)
+      .exec();
+
+    if (!userFollows || !userId) {
+      return res.status(400).json({
+        status: "error",
+        message: "Cant find the follows list",
+      });
+    }
+    // LLamada método/función
+    let followUserIds = await followService.followUserIds(req.authorization.id);
+    // Respuesta
+    return res.status(200).json({
+      status: "success",
+      message: "Follows list",
+      userFollows,
+      page,
+      userFollowing: {
+        message: "SIGUIENDO",
+        data: followUserIds.following,
+      },
+      userFollowMe: {
+        message: "SEGUIDORES",
+        data: followUserIds.followers,       
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(404).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+const followed = async (req, res) => {
+  try {
+    // Recoger id del usuario logeado
+    let userId = req.authorization.id;
+    // Recoger id por params
+    if (req.params.id) userId = req.params.id;
+    // Pagina elegida, si no la pagina 1
+    let page = 1;
+    if (req.params.page) page = req.params.page;
+    // Usuarios por pagina que quiero mostrar
+    const itemsPerPage = 5;
+    // Find a follow, mostrar datos de los usuarios y paginar con mogoose paginate
+    const userFollows = await Follow.find({
       user: userId,
     })
       .populate("user followed")
@@ -120,17 +171,6 @@ const following = async (req, res) => {
         data: followUserIds.followers,       
       },
     });
-  } catch (error) {
-    console.error(error);
-    return res.status(404).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-};
-
-const followed = async (req, res) => {
-  try {
   } catch (error) {
     console.error(error);
     return res.status(404).json({
