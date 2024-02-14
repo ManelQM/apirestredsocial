@@ -1,10 +1,10 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("../services/authService");
+const followService = require("../services/followService");
 const mongoosePagination = require("mongoose-pagination");
 const fs = require("fs");
 const path = require("path");
-
 
 const test = (req, res) => {
   return res.status(200).json({
@@ -125,11 +125,20 @@ const getProfile = async (req, res) => {
         message: "Who are you?, user dont exists",
       });
     }
+
+     const listOfFollowsAndFollowers = await followService.followThisUser(
+        req.authorization.id,
+        id
+      );
+      console.log("AQUIIIIIII",listOfFollowsAndFollowers)
+
     // Devolver profile/resultado
     return res.status(200).json({
       status: "success",
-      message: "This your profile",
+      message: "This is your profile",
       user: profile,
+      following: listOfFollowsAndFollowers.following,
+      follower: listOfFollowsAndFollowers.follower,
     });
   } catch (error) {
     console.error("Error trying to find profile", error);
@@ -293,9 +302,6 @@ const getAvatar = async (req, res) => {
     });
   }
 };
-
-
-
 
 module.exports = {
   test,

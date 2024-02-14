@@ -1,12 +1,12 @@
 const Follow = require("../models/follow");
 
-const followUserIds = async (userId) => {
+const followUserIds = async (user) => {
   try {
-    let following = await Follow.find({ user: userId })
+    let following = await Follow.find({ user: user })
       .select({ followed: 1, _id: 0 })
       .exec();
 
-    let followers = await Follow.find({ followed: userId })
+    let followers = await Follow.find({ followed: user })
       .select({ user: 1, _id: 0 })
       .exec();
 
@@ -26,21 +26,29 @@ const followUserIds = async (userId) => {
   }
 };
 
-const followThisUser = async(userId, profileUserId) => {
-  try{
-    let following = await Follow.findOne({user:userId, followed:profileUserId })
-    .select({followed :1, _id: 0})
-    .exec();
-    let followers = await Follow.find({user:userId})
-    .select({user: 1, _id: 0})
-    .exec(); 
-  }catch{
+const followThisUser = async (user) => {
+  let following = await Follow.findOne({
+    user: user,
+    // followed: followed,
+  });
+  console.log("Esto viene algo o que", user);
 
-  }
+  let follower = await Follow.findOne({
+    // user: followed,
+    followed: user,
+  });
 
-}
+  console.log("FollowingService:", following);
+  console.log("FollowerService:", follower);
+  return {
+    following,
+    follower,
+  };
+};
+
 
 
 module.exports = {
   followUserIds,
+  followThisUser,
 };
