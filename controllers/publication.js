@@ -73,33 +73,53 @@ const getPublication = async (req, res) => {
   }
 };
 
-const deletePublication = async (req,res) => {
+// DELETE PUBLICATION CONTROLLER 
+
+const deletePublication = async (req, res) => {
   try {
-    const publicationId = req.params.id; 
+    // Recoger datos
+    const publicationId = req.params.id;
+    // Buscar por Id
+    const publication = await Publication.findById(publicationId);
 
-    const deleteThis = await Publication.find({"user": req.authorization.id, "_id": publicationId})
-    .remove(); 
-
-    if (!deleteThis) {
+    // Verificar si la publicación existe
+    if (!publication) {
       return res.status(400).json({
         status: "error",
-        message: "Cant remove the publication"
+        message: "Publication not found",
       });
-    };
+    }
+    // Verificar si el usuario que quiere borrar la publicación es el mismo que la ha creado
+    if (publication.user.toString() !== req.authorization.id) {
+      return res.status(403).json({
+        status: "error",
+        message: "You are not authorized to delete this publication",
+      });
+    }
+    // Buscar publicación por Id y borrar
+    const deletePublication = await Publication.findByIdAndDelete(
+      publicationId
+    );
+
+    if (!deletePublication) {
+      return res.status(400).json({
+        status: "error",
+        message: "Unable to remove the publication",
+      });
+    }
 
     return res.status(200).json({
       status: "success",
       message: "Publication removed!",
-      publicationDeleted: publicationId
+      publicationDeleted: publicationId,
     });
-
-  } catch(error) {
-    console.error(error)
+  } catch (error) {
+    console.error(error);
     return res.status(400).json({
-      status:"error",
+      status: "error",
       message: "Internal Server Error",
     });
-  };
+  }
 };
 
 module.exports = {
