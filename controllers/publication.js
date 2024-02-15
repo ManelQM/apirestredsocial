@@ -133,10 +133,10 @@ const getAllUserPublication = async (req, res) => {
     const itemsPerPage = 10;
 
     const publications = await Publication.find({user:userId})
-      .sort("-created_at")
-      .populate("user", "-password,-__v,-role")
-      .paginate(page, itemsPerPage);
-
+    .sort({ created_at: -1 })  // Ordenar por created_at en orden descendente
+    .skip((page - 1) * itemsPerPage)
+    .limit(itemsPerPage)
+    .populate("user", "-password -__v -role"); // TO DO => Populate no funciona bien 
     console.log("Publications =>", publications);
 
     if (!publications) {
@@ -161,10 +161,77 @@ const getAllUserPublication = async (req, res) => {
   }
 };
 
+// UPLOAD IMAGE PUBLICATION CONTROLLER
+
+const uploadImgPblctn = async (req, res) => {
+  try {
+    // Recoger fichero de imagen y comprobar que existe
+    const publicationId = req.params.id // Id de la publicación 
+    if (!req.file) {
+      return res.status(404).json({
+        status: "error",
+        message: "Please add an Image",
+      });
+    }
+    // Conseguir nombre del archivo
+    let image = req.file.originalname; //originalname nombre que le da Multer a la imagen en sí
+
+    // Sacar la extension del archivo
+    const imageSplit = image.split(".");
+    const extension = imageSplit[1];
+
+    // Comprobar extension
+    if (
+      extension !== "png" &&
+      extension !== "jpg" &&
+      extension !== "jpge" &&
+      extension !== "gif"
+    ) {
+      // Si no es correcto, borrar archivo
+      const filePath = req.file.path;
+      const fileDeleted = fs.unlinkSync(filePath);
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid extension file",
+      });
+    }
+
+    // Si es correcto guardar en bbdd
+    const storedPublicationImg = await Publication.findOneAndUpdate(
+      { user: req.authorization.id , "_id":publicationId }, // Solamente buscamos publicaciones del usuario logeado
+      { file: req.file.filename },
+      { new: true }
+    ); // filename es el nombre final generado por Multer
+
+    if (!storedPublicationImg) {
+      return res.status(400).json({
+        status: "error",
+        message: "Cant update the image, user not found",
+      });
+    }
+    // Devolver respuesta
+    return res.status(200).json({
+      status: "success",
+      message: "Avatar uploaded with success!",
+      user: storedPublicationImg,
+      file: req.file,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(404).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+
+
 module.exports = {
   test1,
   createPublication,
   getPublication,
   deletePublication,
   getAllUserPublication,
+  uploadImgPblctn,
 };

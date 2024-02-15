@@ -15,7 +15,7 @@ const PublicationSchema = Schema({
     file: String,
     created_at: {
         type: Date,
-        default: Date.nowS
+        default: Date.now
     }
 }); 
 
