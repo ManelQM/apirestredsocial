@@ -73,7 +73,7 @@ const getPublication = async (req, res) => {
   }
 };
 
-// DELETE PUBLICATION CONTROLLER 
+// DELETE PUBLICATION CONTROLLER
 
 const deletePublication = async (req, res) => {
   try {
@@ -122,9 +122,49 @@ const deletePublication = async (req, res) => {
   }
 };
 
+const getAllUserPublication = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    let page = 1;
+
+    if (req.params.page) page = req.params.page;
+
+    const itemsPerPage = 10;
+
+    const publications = await Publication.find({user:userId})
+      .sort("-created_at")
+      .populate("user", "-password,-__v,-role")
+      .paginate(page, itemsPerPage);
+
+    console.log("Publications =>", publications);
+
+    if (!publications) {
+      return res.status(400).json({
+        status: "error",
+        message: "Cant find publications",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Publications list =>",
+      page,
+      publications,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(404).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
 module.exports = {
   test1,
   createPublication,
   getPublication,
   deletePublication,
+  getAllUserPublication,
 };
