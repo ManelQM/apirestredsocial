@@ -73,8 +73,38 @@ const getPublication = async (req, res) => {
   }
 };
 
+const deletePublication = async (req,res) => {
+  try {
+    const publicationId = req.params.id; 
+
+    const deleteThis = await Publication.find({"user": req.authorization.id, "_id": publicationId})
+    .remove(); 
+
+    if (!deleteThis) {
+      return res.status(400).json({
+        status: "error",
+        message: "Cant remove the publication"
+      });
+    };
+
+    return res.status(200).json({
+      status: "success",
+      message: "Publication removed!",
+      publicationDeleted: publicationId
+    });
+
+  } catch(error) {
+    console.error(error)
+    return res.status(400).json({
+      status:"error",
+      message: "Internal Server Error",
+    });
+  };
+};
+
 module.exports = {
   test1,
   createPublication,
   getPublication,
+  deletePublication,
 };
