@@ -1,6 +1,7 @@
 const Publication = require("../models/publication");
 const fs = require("fs");
 const path = require("path");
+const followService = require("../services/followService");
 
 const test1 = (req, res) => {
   return res.status(200).json({
@@ -253,6 +254,51 @@ const media = async (req, res) => {
   }
 };
 
+// PUBLICATIONS CONTROLLER - FROM USERS FOLLOWED BY THE LOGGED USER
+
+const publicationFeed = async (req,res) => {
+
+  try{
+    // Sacar la página actual 
+    let page = 1; 
+
+    if (req.params.page) {
+      page= req.params.page;
+    }
+    
+    // Establecer número de elementos por página 
+    let itemsPerPage = 5; 
+    
+    // Sacar un array de identificadores de usuarios que yo sigo como usuario logueado
+    const myFollows = await followService.followUserIds(req.authorization.id);
+
+    const publicationsFollowing = await Publication.find
+    ({user: myFollows.following,})
+    .populate("user", "-password -role -__v -email")
+    .sort("created_at"); 
+
+    const total = await publicationsFollowing.paginate(page,itemsPerPage);   
+
+    return res.status(200).json({
+      status: "success",
+      message: "Publication Feed",
+      following: myFollows.following,
+      publicationsFollowing,
+      total,
+      page,
+      itemsPerPage,
+      pages: Math.ceil(total/itemsPerPage),   
+    });
+
+  } catch(error) {
+    console.error(error)
+    return res.status(400).json({
+      status: "error",
+      message: "Internal Server Error", 
+    });
+  };
+};
+
 module.exports = {
   test1,
   createPublication,
@@ -261,4 +307,5 @@ module.exports = {
   getAllUserPublication,
   uploadImgPblctn,
   media,
+  publicationFeed,
 };
