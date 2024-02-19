@@ -1,7 +1,6 @@
 const Publication = require("../models/publication");
-const fs = require("fs"); 
+const fs = require("fs");
 const path = require("path");
-
 
 const test1 = (req, res) => {
   return res.status(200).json({
@@ -229,31 +228,30 @@ const uploadImgPblctn = async (req, res) => {
 };
 
 const media = async (req, res) => {
-  try{
- // Sacar el parametro de la url
- const fileMedia = await req.params.file;
- // Montar el path real de la imagen
- const filePath = "./uploads/publications/" + req.params.file;
- // Comprobar que existe
- fs.stat(filePath, () => {
-   if (!fileMedia) {
-     return res.status(404).json({
-       status: "error",
-       message: "Cant find image",
-     });
-   }
-   // Devolver un file
-   return res.sendFile(path.resolve(filePath));
- });
-  }catch (error){
-    console.error(error)
+  try {
+    // Sacar el parametro de la url
+    const fileMedia = await req.params.file;
+    // Montar el path real de la imagen
+    const filePath = "./uploads/publications/" + req.params.file;
+    // Comprobar que existe
+    fs.stat(filePath, () => {
+      if (!fileMedia) {
+        return res.status(404).json({
+          status: "error",
+          message: "Cant find image",
+        });
+      }
+      // Devolver un file
+      return res.sendFile(path.resolve(filePath));
+    });
+  } catch (error) {
+    console.error(error);
     return res.status(400).json({
       status: "error",
-      message: "Internal Server Error"
-    })
-
-  };
-}
+      message: "Internal Server Error",
+    });
+  }
+};
 
 module.exports = {
   test1,
