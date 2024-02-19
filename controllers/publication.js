@@ -269,16 +269,23 @@ const publicationFeed = async (req,res) => {
     // Establecer número de elementos por página 
     let itemsPerPage = 5; 
     
-    // Sacar un array de identificadores de usuarios que yo sigo como usuario logueado
+    // Sacar identificadores de usuarios que yo sigo como usuario logueado
     const myFollows = await followService.followUserIds(req.authorization.id);
 
-    const publicationsFollowing = await Publication.find
-    ({user: myFollows.following,})
+    
+    const publicationsFollowing = await Publication
+    .find({user: myFollows.following,})
     .populate("user", "-password -role -__v -email")
     .sort("created_at"); 
 
     const total = await publicationsFollowing.paginate(page,itemsPerPage);   
 
+    if(!myFollows || !publicationsFollowing) {
+      return res.status(404).json({
+        status: "error",
+        message: "Cant find the publications feed",
+      });
+    };
     return res.status(200).json({
       status: "success",
       message: "Publication Feed",

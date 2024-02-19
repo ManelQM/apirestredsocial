@@ -24,6 +24,6 @@ router.delete("/deletepublication/:id?",authorization.auth,PublicationController
 router.get("/getpublicationsuser/:id?", authorization.auth,PublicationController.getAllUserPublication);
 router.post("/uploadimg/:id?",authorization.auth,[uploads.single("file0")],PublicationController.uploadImgPblctn); 
 router.get("/media/:file",authorization.auth,PublicationController.media);
-router.get("feed/:page?", authorization.auth,PublicationController.publicationFeed);
+router.get("/feed/:page?", authorization.auth,PublicationController.publicationFeed);
 
 module.exports = router;
