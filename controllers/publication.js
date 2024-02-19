@@ -1,4 +1,7 @@
 const Publication = require("../models/publication");
+const fs = require("fs"); 
+const path = require("path");
+
 
 const test1 = (req, res) => {
   return res.status(200).json({
@@ -132,11 +135,11 @@ const getAllUserPublication = async (req, res) => {
 
     const itemsPerPage = 10;
 
-    const publications = await Publication.find({user:userId})
-    .sort({ created_at: -1 })  // Ordenar por created_at en orden descendente
-    .skip((page - 1) * itemsPerPage)
-    .limit(itemsPerPage)
-    .populate("user", "-password -__v -role"); // TO DO => Populate no funciona bien 
+    const publications = await Publication.find({ user: userId })
+      .sort({ created_at: -1 }) // Ordenar por created_at en orden descendente
+      .skip((page - 1) * itemsPerPage)
+      .limit(itemsPerPage)
+      .populate("user", "-password -__v -role"); // TO DO => Populate no funciona bien
     console.log("Publications =>", publications);
 
     if (!publications) {
@@ -166,7 +169,7 @@ const getAllUserPublication = async (req, res) => {
 const uploadImgPblctn = async (req, res) => {
   try {
     // Recoger fichero de imagen y comprobar que existe
-    const publicationId = req.params.id // Id de la publicación 
+    const publicationId = req.params.id; // Id de la publicación
     if (!req.file) {
       return res.status(404).json({
         status: "error",
@@ -198,7 +201,7 @@ const uploadImgPblctn = async (req, res) => {
 
     // Si es correcto guardar en bbdd
     const storedPublicationImg = await Publication.findOneAndUpdate(
-      { user: req.authorization.id , "_id":publicationId }, // Solamente buscamos publicaciones del usuario logeado
+      { user: req.authorization.id, _id: publicationId }, // Solamente buscamos publicaciones del usuario logeado
       { file: req.file.filename },
       { new: true }
     ); // filename es el nombre final generado por Multer
@@ -225,7 +228,32 @@ const uploadImgPblctn = async (req, res) => {
   }
 };
 
+const media = async (req, res) => {
+  try{
+ // Sacar el parametro de la url
+ const fileMedia = await req.params.file;
+ // Montar el path real de la imagen
+ const filePath = "./uploads/publications/" + req.params.file;
+ // Comprobar que existe
+ fs.stat(filePath, () => {
+   if (!fileMedia) {
+     return res.status(404).json({
+       status: "error",
+       message: "Cant find image",
+     });
+   }
+   // Devolver un file
+   return res.sendFile(path.resolve(filePath));
+ });
+  }catch (error){
+    console.error(error)
+    return res.status(400).json({
+      status: "error",
+      message: "Internal Server Error"
+    })
 
+  };
+}
 
 module.exports = {
   test1,
@@ -234,4 +262,5 @@ module.exports = {
   deletePublication,
   getAllUserPublication,
   uploadImgPblctn,
+  media,
 };

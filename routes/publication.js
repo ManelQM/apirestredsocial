@@ -23,5 +23,5 @@ router.get("/getpublication/:id?", authorization.auth,PublicationController.getP
 router.delete("/deletepublication/:id?",authorization.auth,PublicationController.deletePublication);
 router.get("/getpublicationsuser/:id?", authorization.auth,PublicationController.getAllUserPublication);
 router.post("/uploadimg/:id?",authorization.auth,[uploads.single("file0")],PublicationController.uploadImgPblctn); 
-
+router.get("/media/:file",authorization.auth,PublicationController.media);
 module.exports = router;

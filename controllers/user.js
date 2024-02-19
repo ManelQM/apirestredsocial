@@ -126,11 +126,11 @@ const getProfile = async (req, res) => {
       });
     }
 
-     const listOfFollowsAndFollowers = await followService.followThisUser(
-        req.authorization.id,
-        id
-      );
-      console.log("AQUIIIIIII",listOfFollowsAndFollowers)
+    const listOfFollowsAndFollowers = await followService.followThisUser(
+      req.authorization.id,
+      id
+    );
+    console.log("AQUIIIIIII", listOfFollowsAndFollowers);
 
     // Devolver profile/resultado
     return res.status(200).json({
@@ -169,7 +169,7 @@ const getAllUsers = async (req, res) => {
     //Obtenemos además una lista dentro de la lista total de usuarios en la cual aparecen los usuarios que sigo y que me siguen
     let followUserIds = await followService.followUserIds(req.authorization.id);
     //Devolver Resultado
-    
+
     return res.status(200).json({
       status: "success",
       message: "Users list",
@@ -183,7 +183,7 @@ const getAllUsers = async (req, res) => {
       },
       userFollowMe: {
         message: "SEGUIDORES",
-        data: followUserIds.followers,       
+        data: followUserIds.followers,
       },
     });
   } catch (error) {
