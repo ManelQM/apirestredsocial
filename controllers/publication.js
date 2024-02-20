@@ -256,36 +256,50 @@ const media = async (req, res) => {
 
 // PUBLICATIONS CONTROLLER - FROM USERS FOLLOWED BY THE LOGGED USER
 
-const publicationFeed = async (req,res) => {
-
-  try{
-    // Sacar la página actual 
-    let page = 1; 
+const publicationFeed = async (req, res) => {
+  try {
+    // Sacar la página actual
+    let page = 1;
 
     if (req.params.page) {
-      page= req.params.page;
+      page = req.params.page;
     }
-    
-    // Establecer número de elementos por página 
-    let itemsPerPage = 5; 
-    
+
+    // Establecer número de elementos por página
+    let itemsPerPage = 5;
+
     // Sacar identificadores de usuarios que yo sigo como usuario logueado
     const myFollows = await followService.followUserIds(req.authorization.id);
 
-    
-    const publicationsFollowing = await Publication
-    .find({user: myFollows.following,})
-    .populate("user", "-password -role -__v -email")
-    .sort("created_at"); 
+    const followingUserIds = myFollows.following.map(
+      (follow) => follow.followed
+    );
+    // const publicationsFollowing = await Publication.find({user: { $in: myFollows.following }})
+    // .populate("user", "-password -role -__v -email")
+    // .sort("created_at");
 
-    const total = await publicationsFollowing.paginate(page,itemsPerPage);   
+    const total = await Publication.countDocuments({
+      user: { $in: followingUserIds },
+    });
 
-    if(!myFollows || !publicationsFollowing) {
+    const publicationsFollowing = await Publication.find({
+      user: { $in: followingUserIds },
+    })
+      .populate("user", "-password -role -__v -email")
+      .sort({ created_at: -1 }) // Ordenar por fecha de creación de forma descendente
+      .skip((page - 1) * itemsPerPage)
+      .limit(itemsPerPage);
+
+    // const total = await publicationsFollowing.paginate(page,itemsPerPage);
+
+    // const total = await Publication.countDocuments({ user: { $in: myFollows.following } });
+
+    if (!myFollows || !publicationsFollowing) {
       return res.status(404).json({
         status: "error",
         message: "Cant find the publications feed",
       });
-    };
+    }
     return res.status(200).json({
       status: "success",
       message: "Publication Feed",
@@ -294,16 +308,15 @@ const publicationFeed = async (req,res) => {
       total,
       page,
       itemsPerPage,
-      pages: Math.ceil(total/itemsPerPage),   
+      pages: Math.ceil(total / itemsPerPage),
     });
-
-  } catch(error) {
-    console.error(error)
+  } catch (error) {
+    console.error(error);
     return res.status(400).json({
       status: "error",
-      message: "Internal Server Error", 
+      message: "Internal Server Error",
     });
-  };
+  }
 };
 
 module.exports = {
