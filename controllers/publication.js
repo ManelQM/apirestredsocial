@@ -274,9 +274,6 @@ const publicationFeed = async (req, res) => {
     const followingUserIds = myFollows.following.map(
       (follow) => follow.followed
     );
-    // const publicationsFollowing = await Publication.find({user: { $in: myFollows.following }})
-    // .populate("user", "-password -role -__v -email")
-    // .sort("created_at");
 
     const total = await Publication.countDocuments({
       user: { $in: followingUserIds },
@@ -289,10 +286,6 @@ const publicationFeed = async (req, res) => {
       .sort({ created_at: -1 }) // Ordenar por fecha de creación de forma descendente
       .skip((page - 1) * itemsPerPage)
       .limit(itemsPerPage);
-
-    // const total = await publicationsFollowing.paginate(page,itemsPerPage);
-
-    // const total = await Publication.countDocuments({ user: { $in: myFollows.following } });
 
     if (!myFollows || !publicationsFollowing) {
       return res.status(404).json({

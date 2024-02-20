@@ -1,10 +1,11 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const jwt = require("../services/authService");
-const followService = require("../services/followService");
 const mongoosePagination = require("mongoose-pagination");
 const fs = require("fs");
 const path = require("path");
+const jwt = require("../services/authService");
+const followService = require("../services/followService")
+const validate = require("../helpers/validate");
 
 const test = (req, res) => {
   return res.status(200).json({
@@ -24,6 +25,9 @@ const register = async (req, res) => {
         message: "Please complete required fields",
       });
     }
+
+    validate(params); // Función validación campos registro
+
     const users = await User.find({
       $or: [
         { email: params.email.toLowerCase() },
