@@ -4,12 +4,12 @@ const validate = (params) => {
   let name =
     !validator.isEmpty(params.name) &&
     validator.isLength(params.name, { min: 3, max: 30 }) &&
-    validator.isAlpha(params.name, "es-ES");
+    validator.isAlpha(params.name.replace(/ /g, ""), "es-ES");
 
-  let surname =
-    !validator.isEmpty(params.surname) &&
-    validator.isLength(params.surname, { min: 3, max: 30 }) &&
-    validator.isAlpha(params.name, "es-ES");
+//   let surname =
+//     !validator.isEmpty(params.surname) &&
+//     validator.isLength(params.surname, { min: 3, max: 30 }) &&
+//     validator.isAlpha(params.name, "es-ES");
 
   let nick =
     !validator.isEmpty(params.nick) &&
@@ -18,6 +18,10 @@ const validate = (params) => {
   let email =
     !validator.isEmpty(params.email) &&
     validator.isEmail(params.email, { min: 3, max: 30 });
+
+  if (!name || !nick || !email) {
+    throw new Error("Please validate your params");
+  } 
 };
 
 module.exports = validate;

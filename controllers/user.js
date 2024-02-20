@@ -27,6 +27,12 @@ const register = async (req, res) => {
     }
 
     validate(params); // Función validación campos registro
+    if(!validate) {
+      return res.status(404).json({
+        status: "error",
+        message: "VALIDATE ERROR",
+      })
+    }
 
     const users = await User.find({
       $or: [
