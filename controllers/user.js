@@ -140,7 +140,6 @@ const getProfile = async (req, res) => {
       req.authorization.id,
       id
     );
-    console.log("AQUIIIIIII", listOfFollowsAndFollowers);
 
     // Devolver profile/resultado
     return res.status(200).json({
