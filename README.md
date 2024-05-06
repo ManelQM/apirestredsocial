@@ -27,8 +27,9 @@ Las tecnologías usadas para el desarrollo de la funcionalidad general de la app
 
   ## Arquitectura BBDD
 
+La base de datos en MongoDB está diseñada para ofrecer una estructura flexible y escalable, adaptada a las necesidades del negocio. Aunque no sigue un modelo relacional, su organización permite un control eficiente de las consultas y peticiones realizadas por los usuarios. La estructura se adapta a la lógica de negocio, proporcionando un registro completo de los datos necesarios para gestionar la plataforma, incluyendo información sobre usuarios registrados, publicaciones, relaciones de seguimiento, y otros elementos relevantes para el funcionamiento de la aplicación.
 
-![DB]()
+![DB](./img/Blank%20diagram.png)
  
 ## Lista de funcionalidades
 
