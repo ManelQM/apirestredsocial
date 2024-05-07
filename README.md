@@ -118,3 +118,123 @@ La base de datos en MongoDB está diseñada para ofrecer una estructura flexible
 
 # English version 
 
+# FaceBook Clone - Social Network - Backend - REST API - MVC
+
+## Summary
+
+FaceBook Clone is a project focused on developing the technology to implement the software for a fictional social network. Always considering the needs associated with the business logic of such applications, users will be able to perform all the typical actions of social networks.
+
+Additionally, this project aims to showcase skills when delving into other frameworks like MongoDB or libraries and dependencies not previously used, such as Multer, Validator, Moment, etc.
+
+## Objectives
+
+Creation of the necessary software infrastructure for the interface of a social network with a scalable and maintainable design, focusing on databases, server-side logic, APIs, architecture, and servers.
+
+To achieve this, we will implement the Model-View-Controller (MVC) pattern as a design pattern, offering the creation of software that not only considers the code architecture but also the intrinsic logic of a social network.
+
+## Technologies
+The technologies used for the development of the general functionality of the app are as follows:
+
+![JS](./img/logo-javascript-logo-png-transparentj.png)&nbsp;&nbsp;&nbsp;
+![NODE](./img/nodejs-horizontal%20(1).svg)
+![EXPRESS](./img/expressjs-ar21%20(1)%20(1).svg)&nbsp;&nbsp;
+![JWT](./img/icons8-json-web-token-48.png)
+
+![MONGOCOMPASS](./img/mongodb-compass.svg)&nbsp;&nbsp;&nbsp;&nbsp;
+![MONGODB](./img/MongoDB_ForestGreen-159x40-9f64cd3.png)
+![MONGOOSE](./img/Mongoose.js%20(2).png)
+
+### Node.js
+Node.js is a JavaScript runtime environment based on Google Chrome's V8 engine. It allows executing JavaScript code on the server-side, making it ideal for web application and API development. Some of its features include:
+
+* Server-side JavaScript: Node.js enables using JavaScript both on the client and server-side, simplifying the development of complete web applications with a single programming language.
+* Event-driven and Asynchronous: Node.js uses an event-driven and asynchronous programming model, which means it can handle multiple concurrent requests efficiently without blocking the main thread.
+* NPM (Node Package Manager): Node.js includes NPM, an integrated package manager that allows installing, managing, and sharing reusable code packages easily.
+* Scalability: Node.js is highly scalable and can be used to build high-concurrency, high-performance applications, making it popular in real-time web applications and RESTful APIs.
+
+### Express
+Express is a web application framework for Node.js that simplifies the development of web applications and APIs. Some of its features include:
+
+* Routing: Express provides a flexible router that allows defining routes to handle HTTP requests and respond with dynamic content.
+* Middleware: It allows integrating third-party middleware to add additional functionality, such as handling cookies, authentication, and request logging.
+* Request and Response Handling: Express makes handling HTTP requests and responses easier through built-in methods and functions, simplifying the creation of robust web applications and APIs.
+
+### MongoDB
+MongoDB is a NoSQL database that is based on a flexible and scalable document model. It uses a JSON-like storage format similar to JavaScript objects, making it easy to integrate with JavaScript-based applications. Some of its key features include:
+
+* Flexible Schema: Unlike relational databases, MongoDB does not require a fixed schema, allowing easy adaptation to changes in data requirements.
+* Horizontal Scalability: MongoDB is highly scalable and can be distributed across multiple servers to handle large volumes of data and high workloads.
+* Queries: MongoDB offers flexible and powerful queries that support a variety of query operations, including range queries, full-text search, and aggregations.
+
+### Mongoose
+Mongoose is an Object-Document Mapping (ODM) library for MongoDB and Node.js that provides an abstraction layer over the MongoDB database. Some of its features include:
+
+* Schemas and Models: Mongoose allows defining structured data schemas and creating models based on these schemas, making it easier to interact with the database.
+* Data Validation: It provides built-in data validation functions to ensure that the entered data meets the specified requirements.
+* Asynchronous Queries: Mongoose supports asynchronous queries that leverage JavaScript's asynchronous features, allowing for efficient database operations.
+
+### Mongo Compass
+MongoDB Compass is a graphical user interface (GUI) for MongoDB that allows visualizing and manipulating data intuitively. Some of its features include:
+
+* Data Exploration: Compass allows easily exploring database collections, viewing individual documents, and running ad hoc queries.
+* Schema Visualization: It provides a graphical view of database schemas, making it easy to understand the data structure.
+* Query Building: It allows building queries using a visual interface and seeing the results in real-time.
+
+### Bcrypt
+Bcrypt is a library that provides secure password hashing functions to protect passwords stored in your database. It uses an adaptive hashing algorithm that adds an additional layer of security by generating a hash of the user's password. Some of its key features include:
+
+* Robust Security: Bcrypt uses a deliberately slow and resource-intensive hashing algorithm, making it highly resistant to brute-force and dictionary attacks.
+* Automatic Salting: Bcrypt automatically incorporates a unique salt value into each password hash it generates. This prevents rainbow table attacks and makes each hash unique, even if the passwords are identical.
+* Ease of Use: Bcrypt provides a simple interface for generating and verifying password hashes, making it easy to integrate into your applications.
+* Scalability: Although intentionally slow, Bcrypt is still fast enough to scale in production applications without significantly affecting server performance.
+
+### JWT (JSON Web Token)
+JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. It is especially useful in authentication and authorization environments, as it allows generating signed tokens that can be verified and trusted, ensuring the integrity of transmitted data. In this API, JWT is used for user authentication, providing an additional layer of security by protecting sensitive routes and resources.
+
+### Multer
+Multer is a form-handling middleware for Node.js primarily used for handling files in web applications. It allows processing form data in multipart/form-data format, which is commonly used for file uploads. In this API, Multer facilitates the management of multimedia files, such as images or documents, allowing users to upload and store files securely and efficiently.
+
+### Validator
+Validator is a data validation library for JavaScript and Node.js that offers a simple and robust way to validate and sanitize input data in web applications and RESTful APIs. It provides a range of functions and methods for checking the integrity and format of data, such as email validation, phone numbers, URLs, etc. In this API, Validator is used to ensure that the data provided by users meets the specified requirements and restrictions, improving the security and reliability of the application.
+
+### Asynchronous Function Architecture
+The asynchronous function architecture in this API leverages the capabilities of JavaScript and Node.js to handle non-blocking tasks efficiently. By using asynchronous functions and JavaScript's promise system, the API can perform non-blocking I/O (input/output) operations, such as database queries or file reading, in a non-blocking manner, improving scalability and responsiveness. This allows handling multiple concurrent requests efficiently, optimizing performance and user experience.
+
+## Database Architecture
+
+The MongoDB database is designed to offer a flexible and scalable structure, adapted to the needs of the business. Although it does not follow a relational model, its organization allows efficient control of queries and requests made by users. The structure adapts to the business logic, providing a comprehensive record of the data necessary to manage the platform, including information about registered users, publications, follow relationships, and other elements relevant to the application's operation.
+
+![DB](./img/Blank%20diagram.png)
+
+## List of User Functionalities
+
+### User Functionalities
+
+- **POST /register**: Register a new user.
+- **GET /login**: User login.
+- **GET /profile/:id**: Get user profile by ID.
+- **GET /userslist/:page?**: Get list of all users (optional pagination).
+- **PUT /update**: Update user profile.
+- **POST /uploadavatar**: Upload user avatar image.
+- **GET /getavatar/:file**: Get user avatar image by file name.
+
+## List of Publication Functionalities
+
+### Publication Functionalities
+
+- **POST /createpublication**: Create a new publication (requires authorization).
+- **GET /getpublication/:id?**: Get a publication by ID (requires authorization).
+- **DELETE /deletepublication/:id?**: Delete a publication by ID (requires authorization).
+- **GET /getpublicationsuser/:id?**: Get all publications of a user by ID (requires authorization).
+- **POST /uploadimg/:id?**: Upload image to a publication by ID (requires authorization).
+- **GET /media/:file**: Get multimedia file of a publication by file name (requires authorization).
+- **GET /feed/:page?**: Get publication feed (optional pagination, requires authorization).
+
+## List of Follow User Functionalities
+
+### Follow User Functionalities
+
+- **POST /followuser**: Follow a user (requires authorization).
+- **DELETE /unfollow/:id**: Unfollow a user by ID (requires authorization).
+- **GET /following/:id?/:page?**: Get users followed by a user by ID (optional pagination, requires authorization).
+- **GET /followed/:id?/:page?**: Get followers of a user by ID (optional pagination, requires authorization).
