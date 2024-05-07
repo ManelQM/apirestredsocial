@@ -88,7 +88,32 @@ La base de datos en MongoDB está diseñada para ofrecer una estructura flexible
  
 ## Lista de funcionalidades
 
+### Funcionalidades del Usuario
 
+- **POST /register**: Registrar un nuevo usuario.
+- **GET /login**: Iniciar sesión de usuario.
+- **GET /profile/:id**: Obtener perfil de usuario por ID.
+- **GET /userslist/:page?**: Obtener lista de todos los usuarios (paginación opcional).
+- **PUT /update**: Actualizar perfil de usuario.
+- **POST /uploadavatar**: Subir imagen de avatar de usuario.
+- **GET /getavatar/:file**: Obtener imagen de avatar de usuario por nombre de archivo.
+
+### Funcionalidades de Publicaciones
+
+- **POST /createpublication**: Crear una nueva publicación (requiere autorización).
+- **GET /getpublication/:id?**: Obtener una publicación por ID (requiere autorización).
+- **DELETE /deletepublication/:id?**: Eliminar una publicación por ID (requiere autorización).
+- **GET /getpublicationsuser/:id?**: Obtener todas las publicaciones de un usuario por ID (requiere autorización).
+- **POST /uploadimg/:id?**: Subir imagen a una publicación por ID (requiere autorización).
+- **GET /media/:file**: Obtener archivo multimedia de una publicación por nombre de archivo (requiere autorización).
+- **GET /feed/:page?**: Obtener el feed de publicaciones (paginación opcional, requiere autorización).
+
+### Funcionalidades de Seguimiento de Usuarios
+
+- **POST /followuser**: Seguir a un usuario (requiere autorización).
+- **DELETE /unfollow/:id**: Dejar de seguir a un usuario por ID (requiere autorización).
+- **GET /following/:id?/:page?**: Obtener usuarios seguidos por un usuario por ID (opcional: paginación, requiere autorización).
+- **GET /followed/:id?/:page?**: Obtener seguidores de un usuario por ID (opcional: paginación, requiere autorización).
 
 
 # English version 
